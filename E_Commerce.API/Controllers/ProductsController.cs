@@ -17,9 +17,9 @@ namespace E_Commerce.API.Controllers
         }
         // Get all products
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts(CancellationToken ct = default)
+        public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProducts([FromQuery]ProductQueryParams queryParams , CancellationToken ct = default)
         {
-            var res = await productService.GetAllProductsAsync(ct);
+            var res = await productService.GetAllProductsAsync(queryParams , ct);
             return ToActionResult(res);
         }
         // Get Product By Id 
