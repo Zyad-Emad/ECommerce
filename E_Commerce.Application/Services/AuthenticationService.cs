@@ -19,6 +19,32 @@ namespace E_Commerce.Application.Services
             this.identityService = identityService;
             this.tokenService = tokenService;
         }
+
+        public async Task<Result<bool>> CheckEmailExistsAsync(string email, CancellationToken ct = default)
+            => await identityService.EmailExistsAsync(email, ct);
+
+        public async Task<Result<UserDto>> GetCurrentUserAsync(string email, CancellationToken ct = default)
+        {
+            var userResult = await identityService.FindUserByEmailAsync(email, ct);
+
+            var user = userResult.data;
+
+            var roleResult = await identityService.GetUserRolesAsync(email, ct);
+            
+            var token = tokenService.CreateToken(user.Id, user.Email, user.UserName, roleResult.data);
+            return Result<UserDto>.Ok(new UserDto()
+            {
+                DisplayName = user.DisplayName,
+                Email = email,
+                Token = token
+            });
+        }
+
+        public async Task<Result<AddressDto>> GetUserAddressAsync(string email, CancellationToken ct = default)
+        {
+            return await identityService.GetUserAddressByEmailAsync(email, ct);
+        }
+
         public async Task<Result<UserDto>> LoginAsync(LoginDto loginDto, CancellationToken ct = default)
         {
             var userResult = await identityService.FindUserByEmailAsync(loginDto.Email , ct);
@@ -62,6 +88,11 @@ namespace E_Commerce.Application.Services
                 DisplayName = user.DisplayName,
                 Token = token
             });
+        }
+
+        public async Task<Result<AddressDto>> UpSertUserAddressAsync(string email, AddressDto addressDto, CancellationToken ct = default)
+        {
+            return await identityService.UpdateOrInsertUserAddressAsync(email, addressDto, ct);
         }
     }
 }
