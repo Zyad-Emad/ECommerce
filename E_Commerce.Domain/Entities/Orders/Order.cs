@@ -16,7 +16,8 @@ namespace E_Commerce.Domain.Entities.Orders
             ICollection<OrderItem> items,
             OrderAddress shipToAddress,
             DeliveryMethod deliveryMethod,
-            decimal subTotal)
+            decimal subTotal,
+            string paymentIntentId)
         {
             BuyerEmail = buyerEmail;
             Items = items;
@@ -24,8 +25,9 @@ namespace E_Commerce.Domain.Entities.Orders
             DeliveryMethod = deliveryMethod;
             DeliveryMethodId = deliveryMethod.Id;
             SubTotal = subTotal;
+            PaymentIntentId = paymentIntentId;
         }
-
+        public string PaymentIntentId { get; set; } = default!;
         public string BuyerEmail { get; private set; } = default!;
         public DateTimeOffset OrderDate { get; private set; } = DateTimeOffset.UtcNow;
         public ICollection<OrderItem> Items { get; private set; } = [];

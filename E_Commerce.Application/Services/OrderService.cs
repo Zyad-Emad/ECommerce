@@ -29,7 +29,10 @@ namespace E_Commerce.Application.Services
             if (basket.Items.Count == 0)
                 return Result<OrderToReturnDto>.Fail(Error.Validation("Basket is Empty", $"Can Not Create Order With Basket With Id {orderDto.BasketId}"));
 
+            var existingOrder = await unitOfWork.GetRepository<Order, Guid>().GetByIdAsync(new PaymentIntentSpec(basket.PaymentIntentId), cancellationToken);
 
+            if (existingOrder is not null)
+                unitOfWork.GetRepository<Order, Guid>().Remove(existingOrder);
 
             var orderRepo = unitOfWork.GetRepository<Order, Guid>();
             var productRepo = unitOfWork.GetRepository<Product, int>();
@@ -63,7 +66,7 @@ namespace E_Commerce.Application.Services
                 return Result<OrderToReturnDto>.Fail(Error.NotFound("Delivery Method Not Found", $"DeliveryMethod With Id {orderDto.DeliveryMethodId} Is Not Found "));
 
             var subTotal = orderItems.Sum(x => x.Quantity * x.Price);
-            var order = new Order(email, orderItems, orderAddress, deliveryMethod, subTotal);
+            var order = new Order(email, orderItems, orderAddress, deliveryMethod, subTotal , basket.PaymentIntentId);
 
             orderRepo.Add(order);
             var result = await unitOfWork.SaveChangesAsync(cancellationToken);
