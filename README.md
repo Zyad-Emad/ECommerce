@@ -173,4 +173,4 @@ E_Commerce.API/
 ## 👤 Author
 
 **Zyad Emad**
-[GitHub](https://github.com/Zyad-Emad) · [LinkedIn](https://www.linkedin.com/in/zyad-emad-5bb1a1339/) · **Email:** <zyad.emad19@gmail.com>
+[GitHub](https://github.com/Zyad-Emad) · [LinkedIn](https://www.linkedin.com/in/zyad-emad-5bb1a1339/) · [Email](mailto:zyad.emad19@gmail.com)
